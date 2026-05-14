@@ -31,7 +31,7 @@ variable "owner" {
 variable "alert_email" {
   description = "Email address that receives alerts when a monitored site goes down."
   type        = string
-  
+
 }
 
 variable "sites_to_monitor" {

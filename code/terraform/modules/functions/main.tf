@@ -9,11 +9,11 @@ resource "azurerm_service_plan" "main" {
 }
 
 resource "azurerm_storage_account" "functions" {
-  name                     = "stfunc${replace(var.project_name, "-", "")}${var.environment}"
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+  name                       = "stfunc${replace(var.project_name, "-", "")}${var.environment}"
+  resource_group_name        = var.resource_group_name
+  location                   = var.location
+  account_tier               = "Standard"
+  account_replication_type   = "LRS"
   https_traffic_only_enabled = true
   min_tls_version            = "TLS1_2"
 
@@ -45,11 +45,11 @@ resource "azurerm_linux_function_app" "main" {
   }
 
   app_settings = {
-    "FUNCTIONS_WORKER_RUNTIME" = "python"
-    "STORAGE_CONNECTION_STRING" = "@Microsoft.KeyVault(VaultName=kv-${var.project_name}-${var.environment};SecretName=storage-connection-string)"
-    "STORAGE_TABLE_NAME"  = "monitoringresults"
-    "SITES_TO_MONITOR"    = join(",", var.sites_to_monitor)
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.main_t1.instrumentation_key
+    "FUNCTIONS_WORKER_RUNTIME"              = "python"
+    "STORAGE_CONNECTION_STRING"             = "@Microsoft.KeyVault(VaultName=kv-${var.project_name}-${var.environment};SecretName=storage-connection-string)"
+    "STORAGE_TABLE_NAME"                    = "monitoringresults"
+    "SITES_TO_MONITOR"                      = join(",", var.sites_to_monitor)
+    "APPINSIGHTS_INSTRUMENTATIONKEY"        = azurerm_application_insights.main_t1.instrumentation_key
     "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.main_t1.connection_string
   }
 
@@ -57,9 +57,9 @@ resource "azurerm_linux_function_app" "main" {
 }
 
 resource "azurerm_key_vault_access_policy" "function_app" {
-  key_vault_id = var.keyvault_id
-  tenant_id    = azurerm_linux_function_app.main.identity[0].tenant_id
-  object_id    = azurerm_linux_function_app.main.identity[0].principal_id
+  key_vault_id       = var.keyvault_id
+  tenant_id          = azurerm_linux_function_app.main.identity[0].tenant_id
+  object_id          = azurerm_linux_function_app.main.identity[0].principal_id
   secret_permissions = ["Get", "List"]
   # Ensures Key Vault access policy exists before Function App starts
   depends_on = [azurerm_key_vault_access_policy.function_app]
@@ -71,7 +71,7 @@ resource "azurerm_log_analytics_workspace" "main" {
   resource_group_name = var.resource_group_name
   sku                 = "PerGB2018"
   retention_in_days   = 30
-  tags = var.tags
+  tags                = var.tags
 }
 
 resource "azurerm_application_insights" "main_t1" {
@@ -79,7 +79,7 @@ resource "azurerm_application_insights" "main_t1" {
   resource_group_name = var.resource_group_name
   location            = var.location
   # Required — Classic App Insights deprecated in Azure 2024+
-  workspace_id        = azurerm_log_analytics_workspace.main.id
-  application_type    = "web"
-  tags = var.tags
+  workspace_id     = azurerm_log_analytics_workspace.main.id
+  application_type = "web"
+  tags             = var.tags
 }
