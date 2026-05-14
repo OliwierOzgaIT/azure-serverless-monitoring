@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/badge/Runtime-Python_3.11-yellow)](https://www.python.org)
 [![Serverless](https://img.shields.io/badge/Compute-Azure_Functions-orange)](https://azure.microsoft.com/en-us/products/functions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Terraform Validate](https://github.com/OliwierOzgaIT/azure-serverless-monitoring/actions/workflows/terraform-validate.yml/badge.svg)](https://github.com/OliwierOzgaIT/azure-serverless-monitoring/actions)
 
 A production-grade, fully serverless uptime monitoring system built on Microsoft Azure.
 
@@ -51,22 +52,6 @@ The goal of this project is to demonstrate a real-world **event-driven serverles
 A timer-triggered Azure Function checks each configured site every 5 minutes and writes results to Table Storage. A second HTTP-triggered Function exposes the data as a REST API at `/api/api`. The static dashboard, hosted on Blob Storage, calls this API directly from the browser. When a site fails, the monitor Function POSTs to a Logic App trigger URL which handles email delivery — keeping alerting logic completely separate from monitoring logic.
 
 <img width="800" alt="architecture-diagram" src="./screenshots/scheme.png" />
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  Azure Resource Group: rg-site-monitor-dev              │
-│                                                         │
-│  Timer (5 min) ──► Function: monitor ──► Table Storage  │
-│                         │                               │
-│                         └──► Logic App (if site DOWN)   │
-│                                                         │
-│  HTTP GET ──────► Function: api ──────► Table Storage   │
-│                                                         │
-│  Browser ───────► Static Website (Blob) ──► api fn      │
-│                                                         │
-│  Function App ──► Key Vault (connection string ref)     │
-└─────────────────────────────────────────────────────────┘
-```
 
 ---
 
