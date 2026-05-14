@@ -1,0 +1,16 @@
+# Copy this file to terraform.tfvars and fill in your real values.
+# terraform.tfvars is gitignored and must never be committed to source control.
+
+project_name = "sitemonitor"
+environment  = "dev"
+location     = "westeurope"
+owner        = "your-name"
+alert_email  = "your-email@example.com"
+
+sites_to_monitor = [
+  "https://www.google.com",
+  "https://www.github.com",
+  "https://azure.microsoft.com",
+  "https://www.cloudflare.com",
+  "https://www.wikipedia.org"
+]
